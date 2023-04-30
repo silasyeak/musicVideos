@@ -2,7 +2,7 @@
 <html style="background-color:#16161d">
   <head>
     <style>
-      
+
       body {
         font-family: Comic Sans MS;
         text-align: center;
@@ -32,6 +32,11 @@
         background-color: #f44336;
         color: white;
       }
+      #resetButton{
+        background-color:grey;
+        color:white;
+
+      }
       #time {
         border: 2px solid white;
         height: 120px;
@@ -53,9 +58,11 @@
     <div class="video-container"></div>
     <div class="video-container"></div>
     <p id="time"></p>
-
+    
     <button id="startButton" onclick="startTimer()">Start</button>
     <button id="stopButton" onclick="stopTimer()" disabled>Stop</button>
+    <button id="resetButton" onclick="resetTimer()">Reset</button>
+    </div>
     <hr>
     
     <div class="video-wrapper">
@@ -171,10 +178,19 @@
         counter++;
       }
 
-      var timeLeft = 25 * 60; // set the initial time to 25 minutes
+      var timeLeft = 0;
       var timerRunning = false;
       var timer;
 
+      function resetTimer(){
+        timeLeft = 25 * 60;
+        clearInterval(timer);
+        updateTimer();
+        document.getElementById("startButton").disabled = false;
+        document.getElementById("stopButton").disabled = true;
+      }
+
+      
       function startTimer() {
         if (!timerRunning) { // check if the timer is not already running
           updateTimer();
@@ -185,7 +201,6 @@
 
             if (timeLeft <= 0) {
               clearInterval(timer);
-              document.getElementById("time").innerHTML = "Time's up!";
               document.getElementById("startButton").disabled = false;
               document.getElementById("stopButton").disabled = true;
             }
@@ -196,6 +211,7 @@
           document.getElementById("stopButton").disabled = false;
         }
       }
+    
 
       function stopTimer() {
         clearInterval(timer);
@@ -205,11 +221,23 @@
         document.getElementById("stopButton").disabled = true;
       }
 
+
       function updateTimer() {
         var minutes = Math.floor(timeLeft / 60);
         var seconds = timeLeft % 60;
+
+        if (timeLeft <= 0) {
+          minutes = 25;
+          seconds = 0;
+          timeLeft = 25*60;
+          clearInterval(timer);
+          document.getElementById("startButton").disabled = false;
+          document.getElementById("stopButton").disabled = true;
+        }
+
         document.getElementById("time").innerHTML = minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
       }
+
 
     </script>
     
