@@ -33,7 +33,7 @@
         color: white;
       }
       #resetButton{
-        background-color:grey;
+        background-color:gray;
         color:white;
 
       }
@@ -50,19 +50,29 @@
       p{
         margin:0;
       }
+      #video-container-wrapper.inline {
+        display: inline-flex;
+      }
+
     </style>
   </head>
   <body>
     
+    <div id="video-container-wrapper">
+      <div class="video-container"></div>
+      <div class="video-container"></div>
+    </div>
     
-    <div class="video-container"></div>
-    <div class="video-container"></div>
+    
+
     <p id="time"></p>
     
     <button id="startButton" onclick="startTimer()">Start</button>
     <button id="stopButton" onclick="stopTimer()" disabled>Stop</button>
     <button id="resetButton" onclick="resetTimer()">Reset</button>
+    <button onclick="toggleVideoContainers()" style = "background-color: purple;">hor/vert</button>
     </div>
+    
     <hr>
     
     <div class="video-wrapper">
@@ -237,6 +247,11 @@
 
         document.getElementById("time").innerHTML = minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
       }
+      function toggleVideoContainers() {
+        var wrapper = document.getElementById("video-container-wrapper");
+        wrapper.classList.toggle("inline");
+      }
+
 
 
     </script>
