@@ -20,12 +20,13 @@ body, html {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: 10px;
-    padding: 20px;
+    /* padding: 20px; */
     max-width: 100%;
   }
   
   .video-thumbnail {
     cursor: pointer;
+
   }
   
   iframe {

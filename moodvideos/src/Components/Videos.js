@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import './Videos.css';
+import Dropdown from 'react-bootstrap/Dropdown';
+
 
 
 const Videos = () => {
@@ -18,37 +20,50 @@ const Videos = () => {
     "https://www.youtube.com/embed/gKBkS-dv4lg"
   ];
 
+  // const embedVideo = (index) => {
+  //   const videoSrc = videos[index];
+  //   const newVideoContainers = [...videoContainers];
+  //   newVideoContainers[counter % 2] = videoSrc;
+  //   setVideoContainers(newVideoContainers);
+  //   setCounter(counter + 1);
+  // };
   const embedVideo = (index) => {
     const videoSrc = videos[index];
-    const newVideoContainers = [...videoContainers];
-    newVideoContainers[counter % 2] = videoSrc;
-    setVideoContainers(newVideoContainers);
-    setCounter(counter + 1);
+    setVideoContainers([videoSrc]);
   };
 
 
 
   return (
     <div>
-        <div id="video-container-wrapper">
-            {videoContainers.map((src, index) => src && (
-                <iframe key={index} width="560" height="315" src={src} title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen></iframe>
-            ))}
-        </div>
-
-        <div className="video-wrapper">
-        {videos.map((src, index) => (
-          <div className="video-thumbnail" key={index}>
-            <img
-              src={`https://img.youtube.com/vi/${src.split("/")[4]}/mqdefault.jpg`}
-              alt="Video thumbnail"
-              onClick={() => embedVideo(index)}
-            />
-            
-          </div>
-        ))}
+      <div id="video-container-wrapper" style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%' }}>
+        {videoContainers[0] && (
+          <iframe width="100%" height="100%" src={videoContainers[0]} title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen></iframe>
+        )}
       </div>
 
+
+      <div className="video-wrapper">
+        <Dropdown>
+          <Dropdown.Toggle variant="success" id="dropdown-basic">
+            Select a video
+          </Dropdown.Toggle>
+
+          <Dropdown.Menu>
+            {videos.map((src, index) => (
+              <Dropdown.Item key={index} onClick={() => embedVideo(index)}>
+                <img
+                  src={`https://img.youtube.com/vi/${src.split("/")[4]}/mqdefault.jpg`}
+                  alt="Video thumbnail"
+                  width="50px"
+                  height="auto"
+                />
+              </Dropdown.Item>
+            ))}
+          </Dropdown.Menu>
+        </Dropdown>
+
+      </div>
     </div>
   );
 };
