@@ -1,71 +1,77 @@
-import React, { useState } from 'react';
-import './Videos.css';
+import React, { useState, useEffect } from 'react';
+import YouTube from 'react-youtube';
 import Dropdown from 'react-bootstrap/Dropdown';
+import axios from 'axios';
 
-
+const API_KEY = 'AIzaSyDfyeaxxWukn8xvA16XQFkKLTABlCu-Tz8'; // Replace with your YouTube Data API Key
 
 const Videos = () => {
-  const [counter, setCounter] = useState(0);
-  const [videoContainers, setVideoContainers] = useState([null, null]);
-  const videos = [
-    "https://www.youtube.com/embed/fhdX3Wcxwas",
-    "https://www.youtube.com/embed/ChBg4aowzX8",
-    "https://www.youtube.com/embed/L_LUpnjgPso",
-    "https://www.youtube.com/embed/gyvzdEXgNJw",
-    "https://www.youtube.com/embed/n_Dv4JMiwK8",
-    "https://www.youtube.com/embed/NJuSStkIZBg",
-    "https://www.youtube.com/embed/i7Wp1UNaffU",
-    "https://www.youtube.com/embed/G52dUQLxPzg",
-    "https://www.youtube.com/embed/4NrpprUAa2U",
-    "https://www.youtube.com/embed/gKBkS-dv4lg"
-  ];
+  const [videoContainers, setVideoContainers] = useState(null);
+  const [videos, setVideos] = useState([]);
 
-  // const embedVideo = (index) => {
-  //   const videoSrc = videos[index];
-  //   const newVideoContainers = [...videoContainers];
-  //   newVideoContainers[counter % 2] = videoSrc;
-  //   setVideoContainers(newVideoContainers);
-  //   setCounter(counter + 1);
-  // };
-  const embedVideo = (index) => {
-    const videoSrc = videos[index];
-    setVideoContainers([videoSrc]);
+  useEffect(() => {
+    fetchMusicVideos();
+  }, []);
+
+  const fetchMusicVideos = async () => {
+    try {
+      const response = await axios.get(`https://www.googleapis.com/youtube/v3/search`, {
+        params: {
+          part: 'snippet',
+          maxResults: 10,
+          q: 'music',
+          type: 'video',
+          videoCategoryId: '10',
+          key: API_KEY,
+        }
+      });
+      const fetchedVideos = response.data.items.map(item => ({
+        id: item.id.videoId,
+        title: item.snippet.title,
+        thumbnail: item.snippet.thumbnails.medium.url,
+      }));
+      setVideos(fetchedVideos);
+      setRandomVideo(fetchedVideos); // set a random video initially
+    } catch (error) {
+      console.error('Error fetching music videos', error);
+    }
   };
 
+  const setRandomVideo = (videos) => {
+    const randomIndex = Math.floor(Math.random() * videos.length);
+    setVideoContainers(videos[randomIndex].id);
+  };
 
+  const embedVideo = (id) => {
+    setVideoContainers(id);
+  };
 
   return (
     <div>
-      <div id="video-container-wrapper" style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%' }}>
-        {videoContainers[0] && (
-          <iframe width="100%" height="100%" src={videoContainers[0]} title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen></iframe>
-        )}
-      </div>
+      
 
+      <Dropdown>
+        <Dropdown.Toggle variant="success" id="dropdown-basic">
+          Select a video
+        </Dropdown.Toggle>
 
-      <div className="video-wrapper">
-        <Dropdown>
-          <Dropdown.Toggle variant="success" id="dropdown-basic">
-            Select a video
-          </Dropdown.Toggle>
-
-          <Dropdown.Menu>
-            {videos.map((src, index) => (
-              <Dropdown.Item key={index} onClick={() => embedVideo(index)}>
-                <img
-                  src={`https://img.youtube.com/vi/${src.split("/")[4]}/mqdefault.jpg`}
-                  alt="Video thumbnail"
-                  width="50px"
-                  height="auto"
-                />
-              </Dropdown.Item>
-            ))}
-          </Dropdown.Menu>
-        </Dropdown>
-
-      </div>
+        <Dropdown.Menu>
+          {videos.map((video, index) => (
+            <Dropdown.Item key={index} onClick={() => embedVideo(video.id)}>
+              <img
+                src={video.thumbnail}
+                alt={video.title}
+                width="50px"
+                height="auto"
+              />
+            </Dropdown.Item>
+          ))}
+        </Dropdown.Menu>
+      </Dropdown>
+      {videoContainers && <YouTube videoId={videoContainers} />}
     </div>
   );
 };
 
 export default Videos;
+
