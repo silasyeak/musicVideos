@@ -2,8 +2,11 @@ import React, { useState, useEffect } from 'react';
 import YouTube from 'react-youtube';
 import Dropdown from 'react-bootstrap/Dropdown';
 import axios from 'axios';
+import API_KEY from './config.js';
 
-const API_KEY = 'AIzaSyDfyeaxxWukn8xvA16XQFkKLTABlCu-Tz8'; // Replace with your YouTube Data API Key
+
+
+const apiKEY = API_KEY; // Replace with your YouTube Data API Key
 
 const Videos = () => {
   const [videoContainers, setVideoContainers] = useState(null);
@@ -22,7 +25,7 @@ const Videos = () => {
           q: 'music',
           type: 'video',
           videoCategoryId: '10',
-          key: API_KEY,
+          key: apiKEY,
         }
       });
       const fetchedVideos = response.data.items.map(item => ({
@@ -30,11 +33,22 @@ const Videos = () => {
         title: item.snippet.title,
         thumbnail: item.snippet.thumbnails.medium.url,
       }));
-      setVideos(fetchedVideos);
+      setVideos(shuffleArray(fetchedVideos));
       setRandomVideo(fetchedVideos); // set a random video initially
     } catch (error) {
       console.error('Error fetching music videos', error);
     }
+  };
+
+  const shuffleArray = (array) => {
+    let i = array.length - 1;
+    for (; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      const temp = array[i];
+      array[i] = array[j];
+      array[j] = temp;
+    }
+    return array;
   };
 
   const setRandomVideo = (videos) => {
@@ -48,8 +62,6 @@ const Videos = () => {
 
   return (
     <div>
-      
-
       <Dropdown>
         <Dropdown.Toggle variant="success" id="dropdown-basic">
           Select a video
@@ -74,4 +86,3 @@ const Videos = () => {
 };
 
 export default Videos;
-
