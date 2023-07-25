@@ -3,13 +3,14 @@ import YouTube from 'react-youtube';
 import Dropdown from 'react-bootstrap/Dropdown';
 import axios from 'axios';
 import API_KEY from './config.js';
+import he from 'he'; 
 
 const apiKEY = API_KEY; // Replace with your YouTube Data API Key
 
 const Videos = () => {
   const [videoContainers, setVideoContainers] = useState(null);
   const [videos, setVideos] = useState([]);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState('Porter Robinson');
 
   useEffect(() => {
     fetchMusicVideos();
@@ -20,18 +21,20 @@ const Videos = () => {
       const response = await axios.get('https://www.googleapis.com/youtube/v3/search', {
         params: {
           part: 'snippet',
-          maxResults: 10,
+          maxResults: 4,
           q: searchQuery, // Use the user's search query here
           type: 'video',
           videoCategoryId: '10',
           key: apiKEY,
         },
       });
+      
       const fetchedVideos = response.data.items.map((item) => ({
         id: item.id.videoId,
         title: item.snippet.title,
         thumbnail: item.snippet.thumbnails.medium.url,
       }));
+      console.log(fetchedVideos)
       setVideos(shuffleArray(fetchedVideos));
       setRandomVideo(fetchedVideos); // set a random video initially
     } catch (error) {
@@ -87,8 +90,9 @@ const Videos = () => {
 
                 <Dropdown.Menu>
                   {videos.map((video, index) => (
-                    <Dropdown.Item key={index} onClick={() => embedVideo(video.id)}>
+                    <Dropdown.Item key={index} style={{display:"flex"}} onClick={() => embedVideo(video.id)}>
                       <img src={video.thumbnail} alt={video.title} width="50px" height="auto" />
+                      <div>{he.decode(video.title)}</div>
                     </Dropdown.Item>
                   ))}
                 </Dropdown.Menu>
