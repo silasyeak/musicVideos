@@ -4,13 +4,12 @@ import Dropdown from 'react-bootstrap/Dropdown';
 import axios from 'axios';
 import API_KEY from './config.js';
 
-
-
 const apiKEY = API_KEY; // Replace with your YouTube Data API Key
 
 const Videos = () => {
   const [videoContainers, setVideoContainers] = useState(null);
   const [videos, setVideos] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     fetchMusicVideos();
@@ -18,17 +17,17 @@ const Videos = () => {
 
   const fetchMusicVideos = async () => {
     try {
-      const response = await axios.get(`https://www.googleapis.com/youtube/v3/search`, {
+      const response = await axios.get('https://www.googleapis.com/youtube/v3/search', {
         params: {
           part: 'snippet',
           maxResults: 10,
-          q: 'music',
+          q: searchQuery, // Use the user's search query here
           type: 'video',
           videoCategoryId: '10',
           key: apiKEY,
-        }
+        },
       });
-      const fetchedVideos = response.data.items.map(item => ({
+      const fetchedVideos = response.data.items.map((item) => ({
         id: item.id.videoId,
         title: item.snippet.title,
         thumbnail: item.snippet.thumbnails.medium.url,
@@ -60,27 +59,54 @@ const Videos = () => {
     setVideoContainers(id);
   };
 
-  return (
-    <div>
-      <Dropdown>
-        <Dropdown.Toggle variant="success" id="dropdown-basic">
-          Select a video
-        </Dropdown.Toggle>
+  const opts = {
+    height: '1000',
+    width: '100%',
+    playerVars: {
+      // https://developers.google.com/youtube/player_parameters
+      autoplay: 1,
+    },
+  };
 
-        <Dropdown.Menu>
-          {videos.map((video, index) => (
-            <Dropdown.Item key={index} onClick={() => embedVideo(video.id)}>
-              <img
-                src={video.thumbnail}
-                alt={video.title}
-                width="50px"
-                height="auto"
-              />
-            </Dropdown.Item>
-          ))}
-        </Dropdown.Menu>
-      </Dropdown>
-      {videoContainers && <YouTube videoId={videoContainers} />}
+  const handleSearch = (event) => {
+    event.preventDefault();
+    fetchMusicVideos();
+  };
+
+  return (
+
+    <div>
+      <nav class="navbar navbar-expand-lg navbar-light bg-dark">
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item dropdown">
+              <Dropdown style={{paddingLeft:"10px"}}>
+                <Dropdown.Toggle variant="success" id="dropdown-basic">
+                  Select a video
+                </Dropdown.Toggle>
+
+                <Dropdown.Menu>
+                  {videos.map((video, index) => (
+                    <Dropdown.Item key={index} onClick={() => embedVideo(video.id)}>
+                      <img src={video.thumbnail} alt={video.title} width="50px" height="auto" />
+                    </Dropdown.Item>
+                  ))}
+                </Dropdown.Menu>
+              </Dropdown>
+            </li>
+
+          </ul>
+          <form class="form-inline my-2 my-lg-0" onSubmit={handleSearch} style={{ display: "flex", width: "400px", margin: "20px" }}>
+            <input class="form-control mr-sm-2" type="search" placeholder="Search your favorite artist!" aria-label="Search"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+          </form>
+        </div>
+      </nav>
+
+      <div>{videoContainers && <YouTube videoId={videoContainers} opts={opts} />}</div>
     </div>
   );
 };
