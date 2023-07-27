@@ -21,7 +21,7 @@ const Videos = () => {
   useEffect(() => {
     fetchMusicVideos();
     fetchArtists(); // Fetch artists initially
-  }, []);
+  }, [searchQuery]);
 
   const fetchMusicVideos = async () => {
     try {
