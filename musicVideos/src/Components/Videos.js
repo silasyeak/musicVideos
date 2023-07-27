@@ -11,8 +11,11 @@ import he from 'he';
 const Videos = () => {
   const [videoContainers, setVideoContainers] = useState(null);
   const [videos, setVideos] = useState([]);
-  const [searchQuery, setSearchQuery] = useState('DJ Khaled');
+  const [searchQuery, setSearchQuery] = useState('Post Malone');
   const [artists, setArtists] = useState([]);
+  const [relatedArtists, setRelatedArtists] = useState([]);
+
+
 
 
   useEffect(() => {
@@ -67,23 +70,42 @@ const Videos = () => {
         params: {
           q: searchQuery,
           type: 'artist',
-          limit: 10, //for testing reasons
+          limit: 5, // for testing reasons
         },
         headers: {
           Authorization: `Bearer ${spotifyKey}`,
         },
       });
-
+  
       const fetchedArtists = response.data.artists.items.map((artist) => ({
         id: artist.id,
         name: artist.name,
       }));
-
-      setArtists(fetchedArtists);
+  
+      // Get the first artist from the search results (assuming there's only one artist with that name)
+      const mainArtist = fetchedArtists[0];
+  
+      // Fetch related artists for the main artist
+      const relatedArtistsResponse = await axios.get(`https://api.spotify.com/v1/artists/${mainArtist.id}/related-artists`, {
+        headers: {
+          Authorization: `Bearer ${spotifyKey}`,
+        },
+      });
+  
+      const fetchedRelatedArtists = relatedArtistsResponse.data.artists.map((artist) => ({
+        id: artist.id,
+        name: artist.name,
+      }));
+  
+      // Set the related artists state
+      setRelatedArtists(fetchedRelatedArtists);
+      setArtists(fetchedArtists); // Move this line here to set the main artists state after fetching related artists
     } catch (error) {
       console.error('Error fetching artists', error);
     }
   };
+  
+
 
 
   const setRandomVideo = (videos) => {
@@ -107,7 +129,6 @@ const Videos = () => {
   const handleSearch = (event) => {
     event.preventDefault();
     fetchMusicVideos();
-    fetchArtists();
   };
 
   return (
@@ -128,11 +149,12 @@ const Videos = () => {
                       <div>{he.decode(video.title)}</div>
                     </Dropdown.Item>
                   ))}
-                  {artists.map((artist, index) => (
+                  {relatedArtists.map((artist, index) => (
                     <Dropdown.Item key={index} style={{ display: "flex" }} onClick={() => selectArtist(artist.name)}>
                       <div>{artist.name}</div>
                     </Dropdown.Item>
                   ))}
+
                 </Dropdown.Menu>
               </Dropdown>
             </li>
