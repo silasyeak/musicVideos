@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 import YouTube from 'react-youtube';
 import Dropdown from 'react-bootstrap/Dropdown';
 import axios from 'axios';
-import API_KEY from './config.js';
+import { youtubeAPI} from './config.js';
+import { spotifyKey } from './config.js';
 import he from 'he'; 
 
-const apiKEY = API_KEY; // Replace with your YouTube Data API Key
 
 const Videos = () => {
   const [videoContainers, setVideoContainers] = useState(null);
@@ -25,7 +25,7 @@ const Videos = () => {
           q: searchQuery, // Use the user's search query here
           type: 'video',
           videoCategoryId: '10',
-          key: apiKEY,
+          key: youtubeAPI,
         },
       });
       
