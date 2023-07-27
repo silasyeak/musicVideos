@@ -2,18 +2,22 @@ import React, { useState, useEffect } from 'react';
 import YouTube from 'react-youtube';
 import Dropdown from 'react-bootstrap/Dropdown';
 import axios from 'axios';
-import { youtubeAPI} from './config.js';
+import { youtubeAPI } from './config.js';
 import { spotifyKey } from './config.js';
-import he from 'he'; 
+import he from 'he';
+
 
 
 const Videos = () => {
   const [videoContainers, setVideoContainers] = useState(null);
   const [videos, setVideos] = useState([]);
-  const [searchQuery, setSearchQuery] = useState('Porter Robinson');
+  const [searchQuery, setSearchQuery] = useState('DJ Khaled');
+  const [artists, setArtists] = useState([]);
+
 
   useEffect(() => {
     fetchMusicVideos();
+    fetchArtists(); // Fetch artists initially
   }, []);
 
   const fetchMusicVideos = async () => {
@@ -21,14 +25,14 @@ const Videos = () => {
       const response = await axios.get('https://www.googleapis.com/youtube/v3/search', {
         params: {
           part: 'snippet',
-          maxResults: 4,
+          maxResults: 5, //for testing, change this up later
           q: searchQuery, // Use the user's search query here
           type: 'video',
           videoCategoryId: '10',
           key: youtubeAPI,
         },
       });
-      
+
       const fetchedVideos = response.data.items.map((item) => ({
         id: item.id.videoId,
         title: item.snippet.title,
@@ -53,6 +57,35 @@ const Videos = () => {
     return array;
   };
 
+  const selectArtist = (artistName) => {
+    setSearchQuery(artistName);
+  };
+
+  const fetchArtists = async () => {
+    try {
+      const response = await axios.get('https://api.spotify.com/v1/search', {
+        params: {
+          q: searchQuery,
+          type: 'artist',
+          limit: 10, //for testing reasons
+        },
+        headers: {
+          Authorization: `Bearer ${spotifyKey}`,
+        },
+      });
+
+      const fetchedArtists = response.data.artists.items.map((artist) => ({
+        id: artist.id,
+        name: artist.name,
+      }));
+
+      setArtists(fetchedArtists);
+    } catch (error) {
+      console.error('Error fetching artists', error);
+    }
+  };
+
+
   const setRandomVideo = (videos) => {
     const randomIndex = Math.floor(Math.random() * videos.length);
     setVideoContainers(videos[randomIndex].id);
@@ -74,31 +107,35 @@ const Videos = () => {
   const handleSearch = (event) => {
     event.preventDefault();
     fetchMusicVideos();
+    fetchArtists();
   };
 
   return (
-
     <div>
       <nav class="navbar navbar-expand-lg navbar-light bg-dark">
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav mr-auto">
             <li class="nav-item dropdown">
-              <Dropdown style={{paddingLeft:"10px"}}>
+              <Dropdown style={{ paddingLeft: "10px" }}>
                 <Dropdown.Toggle variant="success" id="dropdown-basic">
                   Select a video
                 </Dropdown.Toggle>
 
                 <Dropdown.Menu>
                   {videos.map((video, index) => (
-                    <Dropdown.Item key={index} style={{display:"flex"}} onClick={() => embedVideo(video.id)}>
+                    <Dropdown.Item key={index} style={{ display: "flex" }} onClick={() => embedVideo(video.id)}>
                       <img src={video.thumbnail} alt={video.title} width="50px" height="auto" />
                       <div>{he.decode(video.title)}</div>
+                    </Dropdown.Item>
+                  ))}
+                  {artists.map((artist, index) => (
+                    <Dropdown.Item key={index} style={{ display: "flex" }} onClick={() => selectArtist(artist.name)}>
+                      <div>{artist.name}</div>
                     </Dropdown.Item>
                   ))}
                 </Dropdown.Menu>
               </Dropdown>
             </li>
-
           </ul>
           <form class="form-inline my-2 my-lg-0" onSubmit={handleSearch} style={{ display: "flex", width: "400px", margin: "20px" }}>
             <input class="form-control mr-sm-2" type="search" placeholder="Search your favorite artist!" aria-label="Search"
@@ -109,7 +146,6 @@ const Videos = () => {
           </form>
         </div>
       </nav>
-
       <div>{videoContainers && <YouTube videoId={videoContainers} opts={opts} />}</div>
     </div>
   );
