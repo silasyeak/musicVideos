@@ -1,7 +1,7 @@
 const https = require('https');
 const fs = require('fs');
 
-// Load Spotify client credentials from config.properties
+// Load Spotify client credentials from config.json
 const properties = JSON.parse(fs.readFileSync('config.json', 'utf-8'));
 const clientId = properties['spotify.clientId'];
 const clientSecret = properties['spotify.clientSecret'];
@@ -28,7 +28,14 @@ const req = https.request(apiUrl, options, (res) => {
   res.on('end', () => {
     const accessToken = JSON.parse(data).access_token;
     console.log('Access Token:', accessToken);
-    // Do something with the access token, like saving it to another config file
+
+    // Save the access token to config.js
+    const configData = `module.exports = { accessToken: '${accessToken}' };`;
+    fs.writeFileSync('config2.js', configData);
+
+    // Alternatively, you can save the access token to another JSON config file
+    // const newConfig = { accessToken: accessToken };
+    // fs.writeFileSync('new_config.json', JSON.stringify(newConfig, null, 2));
   });
 });
 
