@@ -3,7 +3,7 @@ import YouTube from 'react-youtube';
 import Dropdown from 'react-bootstrap/Dropdown';
 import axios from 'axios';
 import { youtubeAPI } from './config.js';
-import { spotifyKey } from './config.js';
+import { accessToken } from './config2.js';
 import he from 'he';
 
 
@@ -73,7 +73,7 @@ const Videos = () => {
           limit: 5, // for testing reasons
         },
         headers: {
-          Authorization: `Bearer ${spotifyKey}`,
+          Authorization: `Bearer ${accessToken}`,
         },
       });
   
@@ -88,7 +88,7 @@ const Videos = () => {
       // Fetch related artists for the main artist
       const relatedArtistsResponse = await axios.get(`https://api.spotify.com/v1/artists/${mainArtist.id}/related-artists`, {
         headers: {
-          Authorization: `Bearer ${spotifyKey}`,
+          Authorization: `Bearer ${accessToken}`,
         },
       });
   
@@ -133,10 +133,10 @@ const Videos = () => {
 
   return (
     <div>
-      <nav class="navbar navbar-expand-lg navbar-light bg-dark">
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav mr-auto">
-            <li class="nav-item dropdown">
+      <nav className="navbar navbar-expand-lg navbar-light bg-dark">
+        <div className="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul className="navbar-nav mr-auto">
+            <li className="nav-item dropdown">
               <Dropdown style={{ paddingLeft: "10px" }}>
                 <Dropdown.Toggle variant="success" id="dropdown-basic">
                   Select a video
@@ -159,12 +159,12 @@ const Videos = () => {
               </Dropdown>
             </li>
           </ul>
-          <form class="form-inline my-2 my-lg-0" onSubmit={handleSearch} style={{ display: "flex", width: "400px", margin: "20px" }}>
-            <input class="form-control mr-sm-2" type="search" placeholder="Search your favorite artist!" aria-label="Search"
+          <form className="form-inline my-2 my-lg-0" onSubmit={handleSearch} style={{ display: "flex", width: "400px", margin: "20px" }}>
+            <input className="form-control mr-sm-2" type="search" placeholder="Search your favorite artist!" aria-label="Search"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+            <button className="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
           </form>
         </div>
       </nav>

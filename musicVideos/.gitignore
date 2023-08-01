@@ -24,5 +24,6 @@ yarn-error.log*
 
 #youtube API
 config.js
+config2.js
 config.json
 config.properties
