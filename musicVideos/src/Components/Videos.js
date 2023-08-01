@@ -11,7 +11,7 @@ import he from 'he';
 const Videos = () => {
   const [videoContainers, setVideoContainers] = useState(null);
   const [videos, setVideos] = useState([]);
-  const [searchQuery, setSearchQuery] = useState('Post Malone');
+  const [searchQuery, setSearchQuery] = useState('Alessia Cara');
   const [artists, setArtists] = useState([]);
   const [relatedArtists, setRelatedArtists] = useState([]);
 
