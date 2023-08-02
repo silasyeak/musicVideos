@@ -16,8 +16,6 @@ const Videos = () => {
   const [relatedArtists, setRelatedArtists] = useState([]);
 
 
-
-
   useEffect(() => {
     fetchMusicVideos();
     fetchArtists(); // Fetch artists initially
@@ -76,27 +74,27 @@ const Videos = () => {
           Authorization: `Bearer ${accessToken}`,
         },
       });
-  
+
       const fetchedArtists = response.data.artists.items.map((artist) => ({
         id: artist.id,
         name: artist.name,
       }));
-  
+
       // Get the first artist from the search results (assuming there's only one artist with that name)
       const mainArtist = fetchedArtists[0];
-  
+
       // Fetch related artists for the main artist
       const relatedArtistsResponse = await axios.get(`https://api.spotify.com/v1/artists/${mainArtist.id}/related-artists`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
       });
-  
+
       const fetchedRelatedArtists = relatedArtistsResponse.data.artists.map((artist) => ({
         id: artist.id,
         name: artist.name,
       }));
-  
+
       // Set the related artists state
       setRelatedArtists(fetchedRelatedArtists);
       setArtists(fetchedArtists); // Move this line here to set the main artists state after fetching related artists
@@ -104,7 +102,7 @@ const Videos = () => {
       console.error('Error fetching artists', error);
     }
   };
-  
+
 
 
 
@@ -167,6 +165,12 @@ const Videos = () => {
             <button className="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
           </form>
         </div>
+        <div>
+          <button type="button" class="btn btn-primary">
+            Project for a later date
+          </button>
+        </div>
+
       </nav>
       <div>{videoContainers && <YouTube videoId={videoContainers} opts={opts} />}</div>
     </div>
