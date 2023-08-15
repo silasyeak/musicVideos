@@ -53,7 +53,7 @@ const Weather = () => {
     // Initial API request
     fetchWeatherData();
 
-    // Interval for updating data every 5 minutes
+    // Interval for updating data 
     const intervalId = setInterval(fetchWeatherData, 300000);
 
     // Clean up the interval

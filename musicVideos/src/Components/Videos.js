@@ -29,7 +29,7 @@ const Videos = () => {
         }, delay);
       };
     };
-    const debouncedFetchMusicVideos = debounce(fetchMusicVideos, 3000); // 3000ms = 3 seconds
+    const debouncedFetchMusicVideos = debounce(fetchMusicVideos, 2000); // 3000ms = 3 seconds
     fetchArtists(); // Fetch artists initially
   }, [searchQuery]);
   
