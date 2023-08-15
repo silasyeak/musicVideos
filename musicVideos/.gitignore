@@ -24,6 +24,6 @@ yarn-error.log*
 
 #youtube API
 config.js
-config2.js
+configSpotify.js
 config.json
 config.properties

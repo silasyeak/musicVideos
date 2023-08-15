@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import "./WeatherAPI.css";
 import { weatherKey } from './config';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const Weather = () => {
   const [weatherData, setWeatherData] = useState([]);
@@ -53,7 +54,7 @@ const Weather = () => {
     // Initial API request
     fetchWeatherData();
 
-    // Interval for updating data every 5 minutes
+    // Interval for updating data 
     const intervalId = setInterval(fetchWeatherData, 300000);
 
     // Clean up the interval
@@ -63,30 +64,46 @@ const Weather = () => {
   if (!currentLocation) {
     return <div>Loading...</div>;
   }
-
   return (
-    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-      {weatherData.map((data, index) => (
-        <div
-          key={index}
-          style={{
-            border: '1px solid black',
-            padding: '10px',
-            borderRadius: '15px',
-            flex: '1',
-            margin: '10px',
-            textAlign: 'center',
-          }}
-        >
-          <h2>{locationName}</h2>
-          Temperature: {parseFloat(((data.main.temp - 273.15) * 9) / 5 + 32).toFixed(2)}&deg;F / {parseFloat((data.main.temp -273.15).toFixed(2))}&deg;C
-          <p>Description: {data.weather[0].description}</p>
-          <img src={`http://openweathermap.org/img/w/${data.weather[0].icon}.png`} alt="Weather" />
-        </div>
-      ))}
+    <div className="container mt-5 custom-card-font">
+      <div className="row">
+        {weatherData.map((data, index) => (
+          <div
+            key={index}
+            className="col-md-6 col-lg-4 mb-4"
+          >
+            <div className="card">
+              <div className="card-body">
+                <h2 className="card-title">{data.name}</h2>
+                
+                <p>Temperature: {parseFloat(((data.main.temp - 273.15) * 9) / 5 + 32).toFixed(2)}&deg;F / {parseFloat((data.main.temp - 273.15).toFixed(2))}&deg;C</p>
+                <p>Description: {data.weather[0].description}</p>
+                <img src={`http://openweathermap.org/img/w/${data.weather[0].icon}.png`} alt="Weather" />
+              </div>
+            </div>
+          </div>
+        ))}
+        {weatherData.map((data, index) => (
+          <div
+            key={index}
+            className="col-md-6 col-lg-8 mb-4"
+          >
+            <div className="card">
+              <div className="card-body">
+                <p>Sunrise: {new Date(data.sys.sunrise * 1000).toLocaleTimeString()}</p>
+                <p>Sunset: {new Date(data.sys.sunset * 1000).toLocaleTimeString()}</p>
+                <p>Wind Speed: {data.wind.speed} m/s</p>
+                <p>Cloudiness: {data.clouds.all}%</p>
+                <p>Coordinates: {data.coord.lat}, {data.coord.lon}</p>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
   
 };
+
 
 export default Weather;

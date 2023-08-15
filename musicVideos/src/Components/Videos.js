@@ -12,7 +12,7 @@ import "./Videos.css";
 const Videos = () => {
   const [videoContainers, setVideoContainers] = useState(null);
   const [videos, setVideos] = useState([]);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState('Dua Lipa');
   const [artists, setArtists] = useState([]);
   const [relatedArtists, setRelatedArtists] = useState([]);
 
@@ -29,7 +29,7 @@ const Videos = () => {
         }, delay);
       };
     };
-    const debouncedFetchMusicVideos = debounce(fetchMusicVideos, 3000); // 3000ms = 3 seconds
+    const debouncedFetchMusicVideos = debounce(fetchMusicVideos, 2000); // 3000ms = 3 seconds
     fetchArtists(); // Fetch artists initially
   }, [searchQuery]);
   
@@ -156,10 +156,11 @@ const Videos = () => {
                 <Dropdown.Menu>
                   {videos.map((video, index) => (
                     <Dropdown.Item key={index} style={{ display: "flex" }} onClick={() => embedVideo(video.id)}>
-                      <img src={video.thumbnail} alt={video.title} width="50px" height="auto" />
+                      {/* <img src={video.thumbnail} alt={video.title} width="50px" height="auto" /> */}
                       <div>{he.decode(video.title)}</div>
                     </Dropdown.Item>
                   ))}
+                  <hr></hr>
                   {relatedArtists.map((artist, index) => (
                     <Dropdown.Item key={index} style={{ display: "flex" }} onClick={() => selectArtist(artist.name)}>
                       <div>{artist.name}</div>
