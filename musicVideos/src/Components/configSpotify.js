@@ -31,7 +31,7 @@ const req = https.request(apiUrl, options, (res) => {
 
     // Save the access token to config.js
     const configData = `module.exports = { accessToken: '${accessToken}' };`;
-    fs.writeFileSync('config2.js', configData);
+    fs.writeFileSync('configSpotifyToken.js', configData);
 
     // Alternatively, you can save the access token to another JSON config file
     // const newConfig = { accessToken: accessToken };

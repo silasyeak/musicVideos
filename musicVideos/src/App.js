@@ -1,7 +1,6 @@
 import './App.css';
 import Videos from './Components/Videos';
-import Timer from './Components/Timer';
-
+import WeatherApi from './Components/WeatherAPI';
 
 
 const App = () => {
@@ -12,7 +11,8 @@ const App = () => {
     <>
       {/* <Timer /> */}
       <Videos />
-      
+      <WeatherApi />
+
 
 
     </>
