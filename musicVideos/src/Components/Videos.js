@@ -2,26 +2,37 @@ import React, { useState, useEffect } from 'react';
 import YouTube from 'react-youtube';
 import Dropdown from 'react-bootstrap/Dropdown';
 import axios from 'axios';
-import { youtubeAPI } from './config.js';
-import { accessToken } from './config2.js';
-import he from 'he';
+import { youtubeKey } from './config.js';
+import { accessToken } from './configSpotifyToken.js';
+import he from 'he'
+import "./Videos.css";
 
 
 
 const Videos = () => {
   const [videoContainers, setVideoContainers] = useState(null);
   const [videos, setVideos] = useState([]);
-  const [searchQuery, setSearchQuery] = useState('Alessia Cara');
+  const [searchQuery, setSearchQuery] = useState('');
   const [artists, setArtists] = useState([]);
   const [relatedArtists, setRelatedArtists] = useState([]);
 
 
-
-
   useEffect(() => {
-    fetchMusicVideos();
+    const debounce = (func, delay) => {
+      let timeoutId;
+      return (...args) => {
+        if (timeoutId) {
+          clearTimeout(timeoutId);
+        }
+        timeoutId = setTimeout(() => {
+          func(...args);
+        }, delay);
+      };
+    };
+    const debouncedFetchMusicVideos = debounce(fetchMusicVideos, 3000); // 3000ms = 3 seconds
     fetchArtists(); // Fetch artists initially
   }, [searchQuery]);
+  
 
   const fetchMusicVideos = async () => {
     try {
@@ -32,7 +43,7 @@ const Videos = () => {
           q: searchQuery, // Use the user's search query here
           type: 'video',
           videoCategoryId: '10',
-          key: youtubeAPI,
+          key: youtubeKey,
         },
       });
 
@@ -76,27 +87,27 @@ const Videos = () => {
           Authorization: `Bearer ${accessToken}`,
         },
       });
-  
+
       const fetchedArtists = response.data.artists.items.map((artist) => ({
         id: artist.id,
         name: artist.name,
       }));
-  
+
       // Get the first artist from the search results (assuming there's only one artist with that name)
       const mainArtist = fetchedArtists[0];
-  
+
       // Fetch related artists for the main artist
       const relatedArtistsResponse = await axios.get(`https://api.spotify.com/v1/artists/${mainArtist.id}/related-artists`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
       });
-  
+
       const fetchedRelatedArtists = relatedArtistsResponse.data.artists.map((artist) => ({
         id: artist.id,
         name: artist.name,
       }));
-  
+
       // Set the related artists state
       setRelatedArtists(fetchedRelatedArtists);
       setArtists(fetchedArtists); // Move this line here to set the main artists state after fetching related artists
@@ -104,7 +115,7 @@ const Videos = () => {
       console.error('Error fetching artists', error);
     }
   };
-  
+
 
 
 
@@ -167,9 +178,11 @@ const Videos = () => {
             <button className="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
           </form>
         </div>
+
       </nav>
       <div>{videoContainers && <YouTube videoId={videoContainers} opts={opts} />}</div>
     </div>
+    
   );
 };
 
