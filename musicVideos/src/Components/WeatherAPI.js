@@ -3,6 +3,7 @@ import axios from 'axios';
 import "./WeatherAPI.css";
 import { weatherKey } from './config';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import {CardGroup, Card} from 'react-bootstrap';
 
 const Weather = () => {
   const [weatherData, setWeatherData] = useState([]);
@@ -65,45 +66,44 @@ const Weather = () => {
     return <div>Loading...</div>;
   }
   return (
-    <div className="container mt-5 custom-card-font">
-      <div className="row">
+    <div>
+      <CardGroup>
+        {/* Temperature and Description Cards */}
         {weatherData.map((data, index) => (
-          <div
-            key={index}
-            className="col-md-6 col-lg-4 mb-4"
-          >
-            <div className="card">
-              <div className="card-body">
-                <h2 className="card-title">{data.name}</h2>
-                
-                <p>Temperature: {parseFloat(((data.main.temp - 273.15) * 9) / 5 + 32).toFixed(2)}&deg;F / {parseFloat((data.main.temp - 273.15).toFixed(2))}&deg;C</p>
+          <Card bg = 'dark' text={'dark' === 'light' ? 'dark' : 'white'} key={index} border={'dark' === 'light' ? 'dark' : 'white'} style={{ width: '18rem', marginBottom: '20px'}}>
+            <Card.Header>{locationName}</Card.Header>
+            <Card.Body>
+              <Card.Title>
+                Temperature: {parseFloat(((data.main.temp - 273.15) * 9) / 5 + 32).toFixed(2)}&deg;F /{' '}
+                {parseFloat((data.main.temp - 273.15).toFixed(2))}&deg;C
+              </Card.Title>
+              <Card.Text>
                 <p>Description: {data.weather[0].description}</p>
                 <img src={`http://openweathermap.org/img/w/${data.weather[0].icon}.png`} alt="Weather" />
-              </div>
-            </div>
-          </div>
+              </Card.Text>
+            </Card.Body>
+          </Card>
         ))}
+
+        {/* Additional Weather Information Cards */}
         {weatherData.map((data, index) => (
-          <div
-            key={index}
-            className="col-md-6 col-lg-8 mb-4"
-          >
-            <div className="card">
-              <div className="card-body">
+          <Card bg = 'dark' text={'dark' === 'light' ? 'dark' : 'white'} key={index} border={'dark' === 'light' ? 'dark' : 'white'} style={{ width: '18rem', marginBottom: '20px'}}>
+            <Card.Header>{data.name}</Card.Header>
+            <Card.Body>
+              <Card.Text>
                 <p>Sunrise: {new Date(data.sys.sunrise * 1000).toLocaleTimeString()}</p>
                 <p>Sunset: {new Date(data.sys.sunset * 1000).toLocaleTimeString()}</p>
                 <p>Wind Speed: {data.wind.speed} m/s</p>
                 <p>Cloudiness: {data.clouds.all}%</p>
                 <p>Coordinates: {data.coord.lat}, {data.coord.lon}</p>
-              </div>
-            </div>
-          </div>
+              </Card.Text>
+            </Card.Body>
+          </Card>
         ))}
-      </div>
+      
+      </CardGroup>
     </div>
   );
-  
-};
-
+}
 
 export default Weather;

@@ -1,21 +1,14 @@
-import './App.css';
 import Videos from './Components/Videos';
 import WeatherApi from './Components/WeatherAPI';
-
+import './App.css';
 
 const App = () => {
 
-
-
   return (
-    <>
-      {/* <Timer /> */}
+    <div>
       <Videos />
       <WeatherApi />
-
-
-
-    </>
+    </div>
   );
 };
 
