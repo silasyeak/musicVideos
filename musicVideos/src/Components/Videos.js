@@ -12,7 +12,7 @@ import "./Videos.css";
 const Videos = () => {
   const [videoContainers, setVideoContainers] = useState(null);
   const [videos, setVideos] = useState([]);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState('Dua Lipa');
   const [artists, setArtists] = useState([]);
   const [relatedArtists, setRelatedArtists] = useState([]);
 
