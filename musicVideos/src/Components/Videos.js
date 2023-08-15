@@ -156,10 +156,11 @@ const Videos = () => {
                 <Dropdown.Menu>
                   {videos.map((video, index) => (
                     <Dropdown.Item key={index} style={{ display: "flex" }} onClick={() => embedVideo(video.id)}>
-                      <img src={video.thumbnail} alt={video.title} width="50px" height="auto" />
+                      {/* <img src={video.thumbnail} alt={video.title} width="50px" height="auto" /> */}
                       <div>{he.decode(video.title)}</div>
                     </Dropdown.Item>
                   ))}
+                  <hr></hr>
                   {relatedArtists.map((artist, index) => (
                     <Dropdown.Item key={index} style={{ display: "flex" }} onClick={() => selectArtist(artist.name)}>
                       <div>{artist.name}</div>
