@@ -71,14 +71,15 @@ const Weather = () => {
         {/* Temperature and Description Cards */}
         {weatherData.map((data, index) => (
           <Card bg = 'dark' text={'dark' === 'light' ? 'dark' : 'white'} key={index} border={'dark' === 'light' ? 'dark' : 'white'} style={{ width: '18rem', marginBottom: '20px'}}>
-            <Card.Header>{locationName}</Card.Header>
+            <Card.Header><h2>{locationName}</h2></Card.Header>
             <Card.Body>
               <Card.Title>
-                Temperature: {parseFloat(((data.main.temp - 273.15) * 9) / 5 + 32).toFixed(2)}&deg;F /{' '}
-                {parseFloat((data.main.temp - 273.15).toFixed(2))}&deg;C
+                <h4>Temperature: {parseFloat(((data.main.temp - 273.15) * 9) / 5 + 32).toFixed(2)}&deg;F /{' '}
+                {parseFloat((data.main.temp - 273.15).toFixed(2))}&deg;C</h4>
+                
               </Card.Title>
               <Card.Text>
-                <p>Description: {data.weather[0].description}</p>
+                <h4>Description: {data.weather[0].description}</h4>
                 <img src={`http://openweathermap.org/img/w/${data.weather[0].icon}.png`} alt="Weather" />
               </Card.Text>
             </Card.Body>
@@ -88,14 +89,14 @@ const Weather = () => {
         {/* Additional Weather Information Cards */}
         {weatherData.map((data, index) => (
           <Card bg = 'dark' text={'dark' === 'light' ? 'dark' : 'white'} key={index} border={'dark' === 'light' ? 'dark' : 'white'} style={{ width: '18rem', marginBottom: '20px'}}>
-            <Card.Header>{data.name}</Card.Header>
+            <Card.Header><h2>{locationName}</h2></Card.Header>
             <Card.Body>
               <Card.Text>
-                <p>Sunrise: {new Date(data.sys.sunrise * 1000).toLocaleTimeString()}</p>
-                <p>Sunset: {new Date(data.sys.sunset * 1000).toLocaleTimeString()}</p>
-                <p>Wind Speed: {data.wind.speed} m/s</p>
-                <p>Cloudiness: {data.clouds.all}%</p>
-                <p>Coordinates: {data.coord.lat}, {data.coord.lon}</p>
+                <h4>Sunrise: {new Date(data.sys.sunrise * 1000).toLocaleTimeString()}</h4>
+                <h4>Sunset: {new Date(data.sys.sunset * 1000).toLocaleTimeString()}</h4>
+                <h4>Wind Speed: {data.wind.speed} m/s</h4>
+                <h4>Cloudiness: {data.clouds.all}%</h4>
+                <h4>Coordinates: {data.coord.lat}, {data.coord.lon}</h4>
               </Card.Text>
             </Card.Body>
           </Card>
