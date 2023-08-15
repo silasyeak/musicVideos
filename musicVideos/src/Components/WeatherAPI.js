@@ -92,8 +92,9 @@ const Weather = () => {
             <Card.Header><h2>{locationName}</h2></Card.Header>
             <Card.Body>
               <Card.Text>
-                <h4>Sunrise: {new Date(data.sys.sunrise * 1000).toLocaleTimeString()}</h4>
-                <h4>Sunset: {new Date(data.sys.sunset * 1000).toLocaleTimeString()}</h4>
+              <h4>Sunrise: {new Date(data.sys.sunrise * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</h4>
+              <h4>Sunset: {new Date(data.sys.sunset * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</h4>
+
                 <h4>Wind Speed: {data.wind.speed} m/s</h4>
                 <h4>Cloudiness: {data.clouds.all}%</h4>
                 <h4>Coordinates: {data.coord.lat}, {data.coord.lon}</h4>
